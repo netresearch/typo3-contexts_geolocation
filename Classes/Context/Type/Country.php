@@ -72,7 +72,9 @@ class Tx_ContextsGeolocation_Context_Type_Country
             }
 
             $geoip = Tx_ContextsGeolocation_Adapter
-                ::getInstance($_SERVER['REMOTE_ADDR']);
+                ::getInstance(
+                    $this->getRemoteAddress()
+                );
 
             $arCountries = explode(',', $strCountries);
             $strCountry  = $geoip->getCountryCode(true);

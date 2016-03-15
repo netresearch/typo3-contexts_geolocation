@@ -72,7 +72,9 @@ class Tx_ContextsGeolocation_Context_Type_Continent
             }
 
             $geoip = Tx_ContextsGeolocation_Adapter
-                ::getInstance($_SERVER['REMOTE_ADDR']);
+                ::getInstance(
+                    $this->getRemoteAddress()
+                );
 
             $arContinents = explode(',', $strContinents);
             $strContinent = $geoip->getContinentCode();

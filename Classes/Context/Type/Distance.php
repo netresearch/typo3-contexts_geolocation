@@ -67,7 +67,9 @@ class Tx_ContextsGeolocation_Context_Type_Distance
     {
         try {
             $geoip = Tx_ContextsGeolocation_Adapter
-                ::getInstance($_SERVER['REMOTE_ADDR']);
+                ::getInstance(
+                    $this->getRemoteAddress()
+                );
 
             $bUnknown   = (bool) $this->getConfValue('field_unknown');
             $arPosition = $geoip->getLocation();
