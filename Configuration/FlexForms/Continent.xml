@@ -56,8 +56,9 @@
        <TCEforms>
          <label></label>
          <config>
+           <type>user</type>
            <form_type>user</form_type>
-           <userFunc>Tx_ContextsGeolocation_Backend-&gt;setupCheck</userFunc>
+           <userFunc>Netresearch\ContextsGeolocation\Backend-&gt;setupCheck</userFunc>
          </config>
        </TCEforms>
      </field_setupCheck>

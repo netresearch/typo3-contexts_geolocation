@@ -1,4 +1,5 @@
 <?php
+namespace Netresearch\ContextsGeolocation\Context\Type;
 /***************************************************************
 *  Copyright notice
 *
@@ -21,9 +22,11 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+use \Netresearch\ContextsGeolocation\AbstractAdapter;
+use \Netresearch\ContextsGeolocation\Exception;
 
 /**
- * Checks that the country of the user is one of the configured ones.
+ * Checks that the continent of the user is one of the configured ones.
  *
  * @category   TYPO3-Extensions
  * @package    Contexts
@@ -32,8 +35,8 @@
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */
-class Tx_ContextsGeolocation_Context_Type_Country
-    extends Tx_Contexts_Context_Abstract
+class ContinentContext
+    extends \Netresearch\Contexts\Context\AbstractContext
 {
     /**
      * Check if the context is active now.
@@ -50,46 +53,47 @@ class Tx_ContextsGeolocation_Context_Type_Country
         }
 
         return $this->invert($this->storeInSession(
-            $this->matchCountries()
+            $this->matchContinents()
         ));
     }
 
     /**
-     * Detects the current country and matches it against the list
-     * of allowed countries
+     * Detects the current continent and matches it against the list
+     * of allowed continents
      *
-     * @return boolean True if the user's country is in the list of
-     *                 allowed countries, false if not
+     * @return boolean True if the user's continent is in the list of
+     *                 allowed continents, false if not
      */
-    public function matchCountries()
+    public function matchContinents()
     {
         try {
-            $strCountries = trim($this->getConfValue('field_countries'));
+            $strContinents = trim($this->getConfValue('field_continents'));
 
-            if ($strCountries == '') {
+            if ($strContinents == '') {
                 //nothing configured? no match.
                 return false;
             }
 
-            $geoip = Tx_ContextsGeolocation_Adapter
+            $geoip = AbstractAdapter
                 ::getInstance(
                     $this->getRemoteAddress()
                 );
 
-            $arCountries = explode(',', $strCountries);
-            $strCountry  = $geoip->getCountryCode(true);
+            $arContinents = explode(',', $strContinents);
+            $strContinent = $geoip->getContinentCode();
 
-            if (($strCountry === false)
-                && in_array('*unknown*', $arCountries)
+            if (($strContinent === false)
+                && in_array('*unknown*', $arContinents)
             ) {
                 return true;
             }
-            if (($strCountry !== false)
-                && in_array($strCountry, $arCountries)
+
+            if (($strContinent !== false)
+                && in_array($strContinent, $arContinents)
             ) {
                 return true;
             }
-        } catch (Tx_ContextsGeolocation_Exception $exception) {
+        } catch (Exception $exception) {
         }
 
         return false;

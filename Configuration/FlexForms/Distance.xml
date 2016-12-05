@@ -21,11 +21,11 @@
        <TCEforms>
          <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/flexform.xml:distance.field_position</label>
          <config>
-           <type>input</type>
+           <type>user</type>
            <size>40</size>
            <eval>trim,required</eval>
            <form_type>user</form_type>
-           <userFunc>Tx_ContextsGeolocation_Backend-&gt;inputMapPosition</userFunc>
+           <userFunc>Netresearch\ContextsGeolocation\Backend-&gt;inputMapPosition</userFunc>
          </config>
        </TCEforms>
      </field_position>
@@ -44,8 +44,9 @@
        <TCEforms>
          <label></label>
          <config>
+           <type>user</type>
            <form_type>user</form_type>
-           <userFunc>Tx_ContextsGeolocation_Backend-&gt;setupCheck</userFunc>
+           <userFunc>Netresearch\ContextsGeolocation\Backend-&gt;setupCheck</userFunc>
          </config>
        </TCEforms>
      </field_setupCheck>

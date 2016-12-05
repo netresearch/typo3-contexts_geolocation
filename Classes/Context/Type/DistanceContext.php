@@ -1,4 +1,5 @@
 <?php
+namespace Netresearch\ContextsGeolocation\Context\Type;
 /***************************************************************
 *  Copyright notice
 *
@@ -21,6 +22,8 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+use \Netresearch\ContextsGeolocation\AbstractAdapter;
+use \Netresearch\ContextsGeolocation\Exception;
 
 /**
  * Distance between given point and user's IP.
@@ -32,8 +35,8 @@
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */
-class Tx_ContextsGeolocation_Context_Type_Distance
-    extends Tx_Contexts_Context_Abstract
+class DistanceContext
+    extends \Netresearch\Contexts\Context\AbstractContext
 {
     /**
      * Check if the context is active now.
@@ -66,7 +69,7 @@ class Tx_ContextsGeolocation_Context_Type_Distance
     public function matchDistance()
     {
         try {
-            $geoip = Tx_ContextsGeolocation_Adapter
+            $geoip = AbstractAdapter
                 ::getInstance(
                     $this->getRemoteAddress()
                 );
@@ -102,7 +105,7 @@ class Tx_ContextsGeolocation_Context_Type_Distance
             );
 
             return $flDistance <= ((float) $strMaxDistance);
-        } catch (Tx_ContextsGeolocation_Exception $exception) {
+        } catch (Exception $exception) {
             return false;
         }
     }

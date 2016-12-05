@@ -13,14 +13,22 @@
  */
 defined('TYPO3_MODE') or die('Access denied.');
 
-if (TYPO3_MODE !== 'BE') {
-    // We load that file in ext_tables.php for the backend
-    include_once t3lib_extMgm::extPath($_EXTKEY) . 'ext_contexts.php';
-}
-
-t3lib_extMgm::addPItoST43(
-    $_EXTKEY, 'pi/class.tx_contextsgeolocation_position.php',
-    '_position', 'list_type', 0
+$arPluginList = array(
+    'Position'     => array(
+        'action' => array(
+            'Position' => 'show'
+        ),
+        'noncachable' => array(),
+    ),
 );
 
+foreach ($arPluginList as $strPluginName => $arControllerActions) {
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Netresearch.' . $_EXTKEY,
+        $strPluginName,
+        $arControllerActions['action'],
+        // non-cacheable actions
+        $arControllerActions['noncachable']
+    );
+}
 ?>

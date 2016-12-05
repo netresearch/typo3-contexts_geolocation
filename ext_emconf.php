@@ -29,11 +29,12 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 1,
 	'lockType' => '',
 	'author_company' => 'Netresearch GmbH & Co.KG',
-	'version' => '0.4.1',
+	'version' => '1.0.0',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '4.5.0-6.2.99',
-			'contexts' => '0.4.0-',
+            'typo3' => '6.2.0-8.9.99',
+            'php'   => '5.3.0-7.0.12',
+			'contexts' => '1.0.0-',
 			'static_info_tables' => '2.0.0-',
 		),
 		'conflicts' => array(

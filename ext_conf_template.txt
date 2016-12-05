@@ -6,3 +6,6 @@
 
 # cat=basic/file/; type=string; label=Path of GeoLite database (directory containing GeoIP.dat and GeoLiteCity.dat)
 geoLiteDatabase =
+
+# cat=basic; type=string; label=App key for MapQuest (developer.mapquest.com/plans)
+app_key =

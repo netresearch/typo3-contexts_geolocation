@@ -13,17 +13,25 @@
  */
 defined('TYPO3_MODE') or die('Access denied.');
 
-if (TYPO3_MODE === 'BE') {
-    // All other modes did load it already
-    include_once t3lib_extMgm::extPath($_EXTKEY) . 'ext_contexts.php';
-}
-
-t3lib_extMgm::addPlugin(
-    array(
-        'LLL:EXT:contexts_geolocation/Resources/Private/Language/locallang_db.xml:tt_content.list_type_contextsgeolocation_position',
-        $_EXTKEY . '_position'
-    ),
-    'list_type'
+$arPluginList = array(
+    'Position'       => false,
 );
+
+foreach ($arPluginList as $strPluginName => $bUseFlexform) {
+    $strPluginKey = strtolower(str_replace('_', '', $_EXTKEY) . '_' . $strPluginName);
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
+        $_EXTKEY,
+        $strPluginName,
+        $strPluginName
+    );
+    if ($bUseFlexform) {
+        $TCA['tt_content']['types']['list']['subtypes_addlist'][$strPluginKey]
+            = 'pi_flexform';
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
+            $strPluginKey,
+            'FILE:EXT:' . $_EXTKEY . '/Configuration/FlexForms/'.$strPluginName.'.xml'
+        );
+    }
+}
 
 ?>

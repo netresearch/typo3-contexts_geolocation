@@ -1,4 +1,5 @@
 <?php
+namespace Netresearch\ContextsGeolocation;
 /**
  * Part of geolocation context extension.
  *
@@ -22,7 +23,7 @@
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */
-class Tx_ContextsGeolocation_Exception extends Exception
+class Exception extends \Exception
 {
 }
 ?>

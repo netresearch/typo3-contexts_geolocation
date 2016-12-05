@@ -1,4 +1,5 @@
 <?php
+namespace Netresearch\ContextsGeolocation;
 /**
  * Part of geolocation context extension.
  *
@@ -11,6 +12,7 @@
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */
+//use Netresearch\ContextsGeolocation\Adapter\AbstractAdapter;
 
 /**
  * Provides methods used in the backend by flexforms.
@@ -22,7 +24,7 @@
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */
-class Tx_ContextsGeolocation_Backend
+class Backend
 {
     /**
      * Get all countries from static info tables.
@@ -57,9 +59,14 @@ class Tx_ContextsGeolocation_Backend
      *
      * @return string HTML code
      */
-    public function inputMapPosition($arFieldInfo, t3lib_tceforms $tceforms)
+    public function inputMapPosition($arFieldInfo, $tceforms)
     {
-        $flex = t3lib_div::xml2array($arFieldInfo['row']['type_conf']);
+        if (!is_array($arFieldInfo['row']['type_conf'])) {
+            $flex = \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($arFieldInfo['row']['type_conf']);
+        } else {
+            $flex = $arFieldInfo['row']['type_conf'];
+        }
+
         if (is_array($flex)
             && isset($flex['data']['sDEF']['lDEF']['field_position']['vDEF'])
         ) {
@@ -69,13 +76,13 @@ class Tx_ContextsGeolocation_Backend
              );
              $lat      = (float) trim($lat);
              $lon      = (float) trim($lon);
-             $jZoom    = 6;
+             $jZoom    = 10;
              $inputVal = $flex['data']['sDEF']['lDEF']['field_position']['vDEF'];
         } else {
             // TODO: geoip current address
             $lat      = 51.33876;
             $lon      = 12.3761;
-            $jZoom    = 4;
+            $jZoom    = 8;
             $inputVal = '';
         }
 
@@ -92,20 +99,44 @@ class Tx_ContextsGeolocation_Backend
             $jRadius = 10;
         }
 
-        $input = $tceforms->getSingleField_typeInput(
-            $arFieldInfo['table'], $arFieldInfo['field'],
-            $arFieldInfo['row'], $arFieldInfo
-        );
+        if ($tceforms instanceof \TYPO3\CMS\Backend\Form\FormEngine) {
+            $input = $tceforms->getSingleField_typeInput(
+                $arFieldInfo['table'], $arFieldInfo['field'],
+                $arFieldInfo['row'], $arFieldInfo
+            );
+        } elseif ($tceforms instanceof \TYPO3\CMS\Backend\Form\Element\UserElement) {
+            $factory = new \TYPO3\CMS\Backend\Form\NodeFactory();
+            $nodeInput = $factory->create(
+                array(
+                    'renderType' => 'input',
+                    'tableName' => $arFieldInfo['table'],
+                    'databaseRow' => $arFieldInfo['row'],
+                    'fieldName' => $arFieldInfo['field'],
+                    'parameterArray' => $arFieldInfo,
+                )
+            );
+            $arInput = $nodeInput->render();
+            $input = $arInput['html'];
+        } else {
+           return '';
+        }
+
         preg_match('#id=["\']([^"\']+)["\']#', $input, $arMatches);
         $inputId = $arMatches[1];
+        $appKey = $this->getAppKey();
 
         $html = <<<HTM
 $input<br/>
+
+
 <link rel="stylesheet" href="/typo3conf/ext/contexts_geolocation/Resources/Public/JavaScript/Leaflet/leaflet.css" />
 <!--[if lte IE 8]>
     <link rel="stylesheet" href="/typo3conf/ext/contexts_geolocation/Resources/Public/JavaScript/Leaflet/leaflet.ie.css" />
 <![endif]-->
 <script src="/typo3conf/ext/contexts_geolocation/Resources/Public/JavaScript/Leaflet/leaflet.js"></script>
+
+<script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=$appKey"></script>
+
 <div id="map"></div>
 <style type="text/css">
 #map { height: 400px; }
@@ -131,27 +162,14 @@ function updatePosition(latlng, marker, circle)
 
 document.observe('dom:loaded', function()
 {
-    // Create the map
-    var map = L.map('map');
-
+    
     // Set view to chosen geographical coordinates
-    map.setView(new L.LatLng($jLat, $jLon), $jZoom);
-
-    // Create the tile layer with correct attribution
-    var osmUrl     = 'http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg';
-    var subDomains = ['otile1','otile2','otile3','otile4'];
-
-    var osmAttrib = 'Data, imagery and map information provided by'
-        + ' <a href="http://open.mapquest.co.uk" target="_blank">MapQuest</a>,'
-        + ' <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a>'
-        + ' and contributors.';
-
-    // Add tile layer
-    L.tileLayer(osmUrl, {
-        attribution : osmAttrib,
-        subdomains  : subDomains
-    }).addTo(map);
-
+    var map = L.map('map', {
+        layers: MQ.mapLayer(),
+        center: [ $jLat, $jLon ],
+        zoom: $jZoom
+    });
+    
     // Add marker of current coordinates
     var marker = L.marker([$jLat, $jLon]).addTo(map);
     marker.dragging.enable();
@@ -217,18 +235,41 @@ HTM;
     public function setupCheck()
     {
         try {
-            Tx_ContextsGeolocation_Adapter::getInstance();
-        } catch (Tx_ContextsGeolocation_Exception $exception) {
-            t3lib_FlashMessageQueue::addMessage(
-                t3lib_div::makeInstance(
-                    't3lib_FlashMessage',
-                    'The "<tt>geoip</tt>" PHP extension is not available.'
-                    . ' Geolocation contexts will not work.',
-                    'Geolocation configuration',
-                    t3lib_FlashMessage::ERROR
-                )
+            AbstractAdapter::getInstance();
+        } catch (Exception $exception) {
+
+            $strMessage =  'The "<tt>geoip</tt>" PHP extension is not available.'
+                . ' Geolocation contexts will not work.';
+            /* @var $message \TYPO3\CMS\Core\Messaging\FlashMessage */
+            $message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                'TYPO3\\CMS\\Core\\Messaging\\FlashMessage',
+                $strMessage,
+                'Geolocation configuration',
+                \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR
             );
+
+            /* @var $flashMessageService \TYPO3\CMS\Core\Messaging\FlashMessageService */
+            $flashMessageService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                'TYPO3\\CMS\\Core\\Messaging\\FlashMessageService'
+            );
+            $queue = $flashMessageService->getMessageQueueByIdentifier();
+            $queue->addMessage($message);
+
         }
+    }
+
+    /**
+     * Get the aopp key for mapquest api
+     *
+     * @return string|null app key
+     */
+    protected function getAppKey()
+    {
+        $arExtConf = unserialize(
+            $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['contexts_geolocation']
+        );
+
+        return $arExtConf['app_key'];
     }
 }
 ?>

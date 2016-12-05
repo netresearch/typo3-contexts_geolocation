@@ -1,4 +1,5 @@
 <?php
+namespace Netresearch\ContextsGeolocation\Adapter;
 /**
  * Part of geolocation context extension.
  *
@@ -11,6 +12,7 @@
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */
+use Netresearch\ContextsGeolocation\Exception;
 
 /**
  * Provides an adapter to the PEAR class "Net_GeoIP".
@@ -23,8 +25,8 @@
  * @link       http://github.com/netresearch/contexts_geolocation
  * @uses       http://pear.php.net/package/Net_GeoIP/
  */
-class Tx_ContextsGeolocation_Adapter_NetGeoIp
-    extends Tx_ContextsGeolocation_Adapter
+class NetGeoIp
+    extends \Netresearch\ContextsGeolocation\AbstractAdapter
 {
     /**
      * Internal Net_GeoIP instance used for querying country database.
@@ -74,7 +76,7 @@ class Tx_ContextsGeolocation_Adapter_NetGeoIp
         }
 
         if ($dbPath === null) {
-            throw new Tx_ContextsGeolocation_Exception(
+            throw new Exception(
                 'Configured geoip database path does not exist'
             );
         }
@@ -192,7 +194,7 @@ class Tx_ContextsGeolocation_Adapter_NetGeoIp
         try {
             $location = $this->geoLiteCity->lookupLocation($this->ip);
 
-            if ($location instanceof Net_GeoIP_Location) {
+            if ($location instanceof \Net_GeoIP_Location) {
                 return $location->getData();
             }
         } catch (Exception $exception) {

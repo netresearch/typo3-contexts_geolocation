@@ -1,4 +1,6 @@
 <?php
+namespace Netresearch\ContextsGeolocation;
+
 /**
  * Part of geolocation context extension.
  *
@@ -11,6 +13,9 @@
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */
+use Netresearch\ContextsGeolocation\Exception;
+use Netresearch\ContextsGeolocation\Adapter\NetGeoIp;
+use Netresearch\ContextsGeolocation\Adapter\GeoIp;
 
 /**
  * Abstract base class for each adapter.
@@ -22,7 +27,7 @@
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */
-abstract class Tx_ContextsGeolocation_Adapter
+abstract class AbstractAdapter
 {
     /**
      * Current IP address.
@@ -47,17 +52,17 @@ abstract class Tx_ContextsGeolocation_Adapter
             return $instance;
         }
 
-        $instance = Tx_ContextsGeolocation_Adapter_GeoIp::getInstance($ip);
+        $instance = GeoIp::getInstance($ip);
         if ($instance !== null) {
             return $instance;
         }
 
-        $instance = Tx_ContextsGeolocation_Adapter_NetGeoIp::getInstance($ip);
+        $instance = NetGeoIp::getInstance($ip);
         if ($instance !== null) {
             return $instance;
         }
 
-        throw new Tx_ContextsGeolocation_Exception(
+        throw new Exception(
             'No installed geoip adapter found'
         );
     }

@@ -1,4 +1,6 @@
 <?php
+namespace Netresearch\ContextsGeolocation\Adapter;
+
 /**
  * Part of geolocation context extension.
  *
@@ -23,8 +25,8 @@
  * @link       http://github.com/netresearch/contexts_geolocation
  * @uses       http://www.php.net/manual/en/book.geoip.php
  */
-class Tx_ContextsGeolocation_Adapter_GeoIp
-    extends Tx_ContextsGeolocation_Adapter
+class GeoIp
+    extends \Netresearch\ContextsGeolocation\AbstractAdapter
 {
     /**
      * Constructor. Protected to prevent direct instanciation.
