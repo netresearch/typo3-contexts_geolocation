@@ -128,7 +128,6 @@ class Backend
         $html = <<<HTM
 $input<br/>
 
-
 <link rel="stylesheet" href="/typo3conf/ext/contexts_geolocation/Resources/Public/JavaScript/Leaflet/leaflet.css" />
 <!--[if lte IE 8]>
     <link rel="stylesheet" href="/typo3conf/ext/contexts_geolocation/Resources/Public/JavaScript/Leaflet/leaflet.ie.css" />
@@ -144,12 +143,21 @@ $input<br/>
 <script type="text/javascript">
 //<![CDATA[
 
+
 function updatePosition(latlng, marker, circle)
 {
     var input = document.getElementById('$inputId');
 
     input.value = latlng.lat + ", " + latlng.lng;
-    input.onchange();
+    
+    if (input.dataset.formengineInputName) {
+        document.getElementsByName(input.dataset.formengineInputName)[0].value = input.value;
+    }
+    
+    if (input.name) {
+        document.getElementsByName(input.name.replace('_hr', ''))[0].value = input.value;
+    }
+    
 
     if (marker !== null) {
         marker.setLatLng(latlng);
@@ -160,64 +168,80 @@ function updatePosition(latlng, marker, circle)
     }
 }
 
-document.observe('dom:loaded', function()
-{
+
+
+// Set view to chosen geographical coordinates
+var map = L.map('map', {
+    layers: MQ.mapLayer(),
+    center: [ $jLat, $jLon ],
+    zoom: $jZoom
+});
     
-    // Set view to chosen geographical coordinates
-    var map = L.map('map', {
-        layers: MQ.mapLayer(),
-        center: [ $jLat, $jLon ],
-        zoom: $jZoom
-    });
-    
-    // Add marker of current coordinates
-    var marker = L.marker([$jLat, $jLon]).addTo(map);
-    marker.dragging.enable();
+// Add marker of current coordinates
+var marker = L.marker([$jLat, $jLon]).addTo(map);
+marker.dragging.enable();
 
-    // Add distance circle
-    var circle = L.circle(
-        [$jLat, $jLon], $jRadius * 1000,
-        {
-            color       : 'red',
-            fillColor   : '#f03',
-            fillOpacity : 0.2
-        }
-    ).addTo(map);
+// Add distance circle
+var circle = L.circle(
+    [$jLat, $jLon], $jRadius * 1000,
+    {
+        color       : 'red',
+        fillColor   : '#f03',
+        fillOpacity : 0.2
+    }
+).addTo(map);
 
-    // Handle dragging of marker
-    marker.on('drag', function(e) {
-        updatePosition(e.target.getLatLng(), null, circle);
-    });
+// Handle dragging of marker
+marker.on('drag', function(e) {
+    updatePosition(e.target.getLatLng(), null, circle);
+});
 
-    // Handle click on map
-    map.on('click', function(e) {
-        updatePosition(e.latlng, marker, circle);
-    });
+// Handle click on map
+map.on('click', function(e) {
+    updatePosition(e.latlng, marker, circle);
+});
 
-    var distanceName = document.getElementById('$inputId').name.replace(
-        'field_position', 'field_distance'
-    );
+//TYPO3 7.6 we have data attributes
+var distanceId = null;
+var distanceElement = document.querySelector('[data-formengine-input-name*="field_distance"]');
+if (distanceElement) {
+    distanceId = distanceElement.id;
+}
 
-    document.getElementsByName(distanceName)[0].observe(
+//before TYPO3 7.6
+var distanceName = document.getElementById('$inputId').name.replace(
+    'field_position', 'field_distance'
+);
+
+if (distanceId) {
+    document.getElementById(distanceId).addEventListener(
         'change', function(e) {
             circle.setRadius(e.target.value * 1000);
-        }
+        }, false
     );
-
-    // Update map if new latitude/longitude input is provided
-    document.getElementById('$inputId').observe(
+} else if (distanceName) {
+    document.getElementsByName(distanceName)[0].addEventListener(
         'change', function(e) {
-            var values = e.target.value.split(',');
-            var lat    = parseFloat(values[0]);
-            var lon    = parseFloat(values[1]);
-            var latlon = new L.LatLng(lat, lon);
-
-            updatePosition(latlon, marker, circle);
-
-            map.panTo(latlon);
-        }
+            circle.setRadius(e.target.value * 1000);
+        }, false
     );
-});
+}
+
+
+// Update map if new latitude/longitude input is provided
+document.getElementById('$inputId').addEventListener(
+    'change', function(e) {
+        var values = e.target.value.split(',');
+        var lat    = parseFloat(values[0]);
+        var lon    = parseFloat(values[1]);
+        var latlon = new L.LatLng(lat, lon);
+
+        updatePosition(latlon, marker, circle);
+
+        map.panTo(latlon);
+    }, false
+);
+
 
 //]]>
 </script>
