@@ -14,7 +14,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'title' => 'Multi-channel contexts: Geolocation',
 	'description' => 'Use the user\'s geographic location as context',
 	'category' => 'misc',
-	'author' => 'Christian Weiske, Marian Pollzien, Rico Sonntag',
+	'author' => 'Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag',
 	'author_email' => 'typo3.org@netresearch.de',
 	'shy' => '',
 	'dependencies' => 'contexts,static_info_tables',
@@ -33,7 +33,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'constraints' => array(
 		'depends' => array(
             'typo3' => '6.2.0-8.9.99',
-            'php'   => '5.3.0-7.0.12',
+            'php'   => '5.3.0-7.1.99',
 			'contexts' => '1.0.0-',
 			'static_info_tables' => '2.0.0-',
 		),
