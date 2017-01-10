@@ -20,8 +20,10 @@ before_install:
   - phpenv config-rm xdebug.ini
   - composer self-update
   - composer --version
+  - cd ..; mv t3x-contexts_geolocation contexts_geolocation; cd contexts_geolocation
 
 before_script:
+  - pwd
   - composer require typo3/cms="$TYPO3_VERSION"
   # Restore composer.json
   - git checkout composer.json
@@ -35,8 +37,6 @@ script:
       if [ $? -eq 0 ]; then
         # Cleanup before we upload
         git reset --hard HEAD && git clean -fx
-        # Build extension files
-        composer extension-release
         # Upload
         TAG_MESSAGE=`git tag -n10 -l $TRAVIS_TAG | sed 's/^[0-9.]*[ ]*//g'`
         echo "Uploading release ${TRAVIS_TAG} to TER"
