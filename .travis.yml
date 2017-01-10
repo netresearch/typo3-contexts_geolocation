@@ -4,6 +4,9 @@ sudo: false
 php:
   - 7.1
 
+env:
+  - TYPO3_VERSION="^8.4.0"
+
 addons:
   apt:
     packages:
@@ -19,7 +22,7 @@ before_install:
   - composer --version
 
 before_script:
-  - composer install
+  - composer require typo3/cms="$TYPO3_VERSION"
   # Restore composer.json
   - git checkout composer.json
   - export TYPO3_PATH_WEB=$PWD/.Build/Web
