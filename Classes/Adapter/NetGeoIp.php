@@ -81,8 +81,8 @@ class NetGeoIp
             );
         }
 
-        $this->geoLiteCountry = Net_GeoIP::getInstance($dbPath . 'GeoIP.dat');
-        $this->geoLiteCity    = Net_GeoIP::getInstance($dbPath . 'GeoLiteCity.dat');
+        $this->geoLiteCountry = \Net_GeoIP::getInstance($dbPath . 'GeoIP.dat');
+        $this->geoLiteCity    = \Net_GeoIP::getInstance($dbPath . 'GeoLiteCity.dat');
         $this->ip             = $ip;
     }
 
