@@ -157,7 +157,7 @@ class NetGeoIp
             if ($threeLetterCode) {
                 $location = $this->geoLiteCity->lookupLocation($this->ip);
 
-                if ($location instanceof Net_GeoIP_Location) {
+                if ($location instanceof \Net_GeoIP_Location) {
                     $data = $location->getData();
                     return $data['countryCode3'];
                 }
