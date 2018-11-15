@@ -1,5 +1,5 @@
 {
-  "name": "netresearch/contexts_geolocation",
+  "name": "netresearch/contexts-geolocation",
   "type": "typo3-cms-extension",
   "description": "Multi-channel contexts: Geolocation - Use the user's geographic location as context",
   "keywords": [
