@@ -55,7 +55,7 @@ class GeoIp
      *
      * @param string $ip IP address
      *
-     * @return Tx_ContextsGeolocation_Adapter_GeoIp|null
+     * @return \Netresearch\ContextsGeolocation\Adapter\GeoIp|null
      */
     public static function getInstance($ip = null)
     {

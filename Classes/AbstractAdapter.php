@@ -41,8 +41,8 @@ abstract class AbstractAdapter
      *
      * @param string $ip IP address
      *
-     * @return Tx_ContextsGeolocation_Adapter
-     * @throws Tx_ContextsGeolocation_Exception
+     * @return \Netresearch\ContextsGeolocation\AbstractAdapter
+     * @throws \Netresearch\ContextsGeolocation\Exception
      */
     public static function getInstance($ip = null)
     {

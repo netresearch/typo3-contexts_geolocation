@@ -1,5 +1,8 @@
 <?php
 namespace Netresearch\ContextsGeolocation;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Part of geolocation context extension.
  *
@@ -37,11 +40,13 @@ class Backend
      */
     public function getCountries(array &$params, $parentObject)
     {
-        $arRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-            'cn_iso_3 AS code, cn_short_en AS name',
-            'static_countries',
-            '', 'name ASC'
-        );
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('static_countries');
+        $arRows = $queryBuilder->select('cn_iso_3 AS code', 'cn_short_en AS name')
+            ->from('static_countries')
+            ->orderBy('name', 'ASC')
+            ->execute()
+            ->fetchAll();
         $params['items'][] = array('- unknown -', '*unknown*');
         foreach ($arRows as $arRow) {
             $params['items'][] = array(

@@ -31,14 +31,14 @@ class NetGeoIp
     /**
      * Internal Net_GeoIP instance used for querying country database.
      *
-     * @var Net_GeoIP
+     * @var \Net_GeoIP
      */
     protected $geoLiteCountry = null;
 
     /**
      * Internal Net_GeoIP instance used for querying city database.
      *
-     * @var Net_GeoIP
+     * @var \Net_GeoIP
      */
     protected $geoLiteCity = null;
 
@@ -49,7 +49,7 @@ class NetGeoIp
      *
      * @return void
      *
-     * @throws Tx_ContextsGeolocation_Exception when the database cannot
+     * @throws \Netresearch\ContextsGeolocation\Exception when the database cannot
      *         be found
      */
     private function __construct($ip = null)
@@ -81,8 +81,8 @@ class NetGeoIp
             );
         }
 
-        $this->geoLiteCountry = Net_GeoIP::getInstance($dbPath . 'GeoIP.dat');
-        $this->geoLiteCity    = Net_GeoIP::getInstance($dbPath . 'GeoLiteCity.dat');
+        $this->geoLiteCountry = \Net_GeoIP::getInstance($dbPath . 'GeoIP.dat');
+        $this->geoLiteCity    = \Net_GeoIP::getInstance($dbPath . 'GeoLiteCity.dat');
         $this->ip             = $ip;
     }
 
@@ -95,20 +95,6 @@ class NetGeoIp
     {
     }
 
-    /**
-     * Returns TRUE if extension is available with in PEAR.
-     *
-     * @return boolean
-     *
-     * TODO Use PEAR_Registry if possible
-     */
-    protected static function checkPear()
-    {
-        // Try to include PEAR extension, Suppress E_WARNING message
-        $result = @include_once "Net/GeoIP.php";
-
-        return (bool) $result;
-    }
 
     /**
      * Get instance of class. Returns null if the Net_GeoIP class is
@@ -116,11 +102,11 @@ class NetGeoIp
      *
      * @param string $ip IP address
      *
-     * @return Tx_ContextsGeolocation_Adapter_NetGeoIp|null
+     * @return NetGeoIp|null
      */
     public static function getInstance($ip = null)
     {
-        if (self::checkPear() && class_exists('Net_GeoIP', true)) {
+        if (class_exists(\Net_GeoIP::class)) {
             return new self($ip);
         }
 
@@ -157,7 +143,7 @@ class NetGeoIp
             if ($threeLetterCode) {
                 $location = $this->geoLiteCity->lookupLocation($this->ip);
 
-                if ($location instanceof Net_GeoIP_Location) {
+                if ($location instanceof \Net_GeoIP_Location) {
                     $data = $location->getData();
                     return $data['countryCode3'];
                 }
@@ -179,7 +165,7 @@ class NetGeoIp
     {
         try {
             return $this->geoLiteCountry->lookupCountryName($this->ip);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             return false;
         }
     }

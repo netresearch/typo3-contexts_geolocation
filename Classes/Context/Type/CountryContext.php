@@ -92,7 +92,7 @@ class CountryContext
             ) {
                 return true;
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
         }
 
         return false;

@@ -105,7 +105,7 @@ class DistanceContext
             );
 
             return $flDistance <= ((float) $strMaxDistance);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             return false;
         }
     }
