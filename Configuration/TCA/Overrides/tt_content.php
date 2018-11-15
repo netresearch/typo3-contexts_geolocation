@@ -10,7 +10,7 @@ call_user_func(function () {
     foreach ($arPluginList as $strPluginName => $bUseFlexform) {
         $strPluginKey = strtolower(str_replace('_', '', $_EXTKEY) . '_' . $strPluginName);
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
-            'Netresearch.context_geolocation',
+            'Netresearch.contexts_geolocation',
             $strPluginName,
             $strPluginName
         );
