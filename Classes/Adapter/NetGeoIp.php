@@ -13,6 +13,8 @@ namespace Netresearch\ContextsGeolocation\Adapter;
  * @link       http://github.com/netresearch/contexts_geolocation
  */
 use Netresearch\ContextsGeolocation\Exception;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Provides an adapter to the PEAR class "Net_GeoIP".
@@ -55,9 +57,7 @@ class NetGeoIp
     private function __construct($ip = null)
     {
         // Get extension configuration
-        $extConfig = unserialize(
-            $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['contexts_geolocation']
-        );
+        $extConfig = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('contexts_geolocation');
 
         $dbPath = null;
 
