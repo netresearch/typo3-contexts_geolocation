@@ -1,5 +1,9 @@
 <?php
 namespace Netresearch\ContextsGeolocation\Context\Type;
+use B13\Magnets\IpLocation;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -22,8 +26,7 @@ namespace Netresearch\ContextsGeolocation\Context\Type;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-use \Netresearch\ContextsGeolocation\AbstractAdapter;
-use \Netresearch\ContextsGeolocation\Exception;
+
 
 /**
  * Checks that the country of the user is one of the configured ones.
@@ -73,14 +76,11 @@ class CountryContext
                 //nothing configured? no match.
                 return false;
             }
-
-            $geoip = AbstractAdapter
-                ::getInstance(
-                    $this->getRemoteAddress()
-                );
+            $geoip = new IpLocation($this->getRemoteAddress());
 
             $arCountries = explode(',', $strCountries);
-            $strCountry  = $geoip->getCountryCode(true);
+            $strCountry  = $geoip->getCountryCode();
+            $strCountry = $this->twoLetterCountryCodeToThreeLetterCountryCode($strCountry);
 
             if (($strCountry === false)
                 && in_array('*unknown*', $arCountries)
@@ -97,5 +97,25 @@ class CountryContext
 
         return false;
     }
+
+    /**
+     * @param string $countryCode
+     * @return string
+     */
+    protected function twoLetterCountryCodeToThreeLetterCountryCode(string $countryCode): string
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('static_countries');
+        return $queryBuilder->select('cn_iso_3')
+            ->from('static_countries')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'cn_iso_2',
+                    $queryBuilder->createNamedParameter($countryCode)
+                )
+            )
+            ->execute()
+            ->fetchColumn(0);
+    }
 }
-?>
+
