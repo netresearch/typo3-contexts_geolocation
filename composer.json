@@ -1,37 +1,37 @@
 {
-  "name": "netresearch/contexts-geolocation",
-  "type": "typo3-cms-extension",
-  "description": "Multi-channel contexts: Geolocation - Use the user's geographic location as context",
-  "keywords": [
-    "TYPO3",
-    "extension",
-    "contexts_geolocation",
-    "contexts"
-  ],
-  "homepage": "https://www.netresearch.de",
-  "support": {
-    "issues": "https://github.com/netresearch/t3x-contexts_geolocation/issues"
-  },
-  "authors": [
-    {
-      "name": "Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag",
-      "email": "typo3.org@netresearch.de",
-      "role": "Developer",
-      "homepage": "https://www.netresearch.de"
-    }
-  ],
-  "license": "GPL-2.0+",
-  "require": {
-    "netresearch/contexts": "^1.0",
-	"b13/magnets": "^1.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Netresearch\\ContextsGeolocation\\": "Classes"
-    }
-  },
-  "replace": {
-    "contexts_geolocation": "self.version",
-    "typo3-ter/contexts_geolocation": "self.version"
-  }
+	"name": "netresearch/contexts-geolocation",
+	"type": "typo3-cms-extension",
+	"description": "Multi-channel contexts: Geolocation - Use the user's geographic location as context",
+	"keywords": [
+		"TYPO3",
+		"extension",
+		"contexts_geolocation",
+		"contexts"
+	],
+	"homepage": "https://www.netresearch.de",
+	"support": {
+		"issues": "https://github.com/netresearch/t3x-contexts_geolocation/issues"
+	},
+	"authors": [
+		{
+			"name": "Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag",
+			"email": "typo3.org@netresearch.de",
+			"role": "Developer",
+			"homepage": "https://www.netresearch.de"
+		}
+	],
+	"license": "GPL-2.0+",
+	"require": {
+		"netresearch/contexts": "^1.0",
+		"b13/magnets": "^1.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Netresearch\\ContextsGeolocation\\": "Classes"
+		}
+	},
+	"replace": {
+		"contexts_geolocation": "self.version",
+		"typo3-ter/contexts_geolocation": "self.version"
+	}
 }
