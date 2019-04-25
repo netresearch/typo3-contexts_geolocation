@@ -19,17 +19,6 @@
        </TCEforms>
      </field_countries>
 
-     <field_setupCheck>
-       <TCEforms>
-         <label></label>
-         <config>
-           <type>user</type>
-           <form_type>user</form_type>
-           <userFunc>Netresearch\ContextsGeolocation\Backend-&gt;setupCheck</userFunc>
-         </config>
-       </TCEforms>
-     </field_setupCheck>
-
    </el>
  </ROOT>
 </T3DataStructure>
