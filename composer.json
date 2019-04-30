@@ -23,7 +23,7 @@
 	"license": "GPL-2.0+",
 	"require": {
 		"netresearch/contexts": "^1.0",
-		"b13/magnets": "^1.0"
+		"b13/magnets": "dev-master"
 	},
 	"autoload": {
 		"psr-4": {
