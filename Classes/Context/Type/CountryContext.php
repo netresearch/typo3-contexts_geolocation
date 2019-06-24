@@ -80,14 +80,17 @@ class CountryContext
 
             $arCountries = explode(',', $strCountries);
             $strCountry  = $geoip->getCountryCode();
+            if ($strCountry === null) {
+                return false;
+            }
             $strCountry = $this->twoLetterCountryCodeToThreeLetterCountryCode($strCountry);
 
-            if (($strCountry === false)
+            if (($strCountry === null)
                 && in_array('*unknown*', $arCountries)
             ) {
                 return true;
             }
-            if (($strCountry !== false)
+            if (($strCountry !== null)
                 && in_array($strCountry, $arCountries)
             ) {
                 return true;
@@ -102,11 +105,11 @@ class CountryContext
      * @param string $countryCode
      * @return string
      */
-    protected function twoLetterCountryCodeToThreeLetterCountryCode(string $countryCode): string
+    protected function twoLetterCountryCodeToThreeLetterCountryCode(string $countryCode): ?string
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('static_countries');
-        return $queryBuilder->select('cn_iso_3')
+        $result = $queryBuilder->select('cn_iso_3')
             ->from('static_countries')
             ->where(
                 $queryBuilder->expr()->eq(
@@ -116,6 +119,10 @@ class CountryContext
             )
             ->execute()
             ->fetchColumn(0);
+        if ($result === false) {
+            return null;
+        }
+        return $result;
     }
 }
 
