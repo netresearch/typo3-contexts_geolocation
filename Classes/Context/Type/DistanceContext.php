@@ -22,8 +22,9 @@ namespace Netresearch\ContextsGeolocation\Context\Type;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-use \Netresearch\ContextsGeolocation\AbstractAdapter;
-use \Netresearch\ContextsGeolocation\Exception;
+
+use B13\Magnets\IpLocation;
+
 
 /**
  * Distance between given point and user's IP.
@@ -69,10 +70,7 @@ class DistanceContext
     public function matchDistance()
     {
         try {
-            $geoip = AbstractAdapter
-                ::getInstance(
-                    $this->getRemoteAddress()
-                );
+            $geoip = new IpLocation($this->getRemoteAddress());
 
             $bUnknown   = (bool) $this->getConfValue('field_unknown');
             $arPosition = $geoip->getLocation();
@@ -82,8 +80,8 @@ class DistanceContext
                 return $bUnknown;
             }
 
-            if (($arPosition['latitude'] == 0)
-                && ($arPosition['longitude'] == 0)
+            if (($arPosition['lat'] == 0)
+                && ($arPosition['lng'] == 0)
             ) {
                 //broken position
                 return $bUnknown;
@@ -101,11 +99,11 @@ class DistanceContext
 
             $flDistance = $this->getDistance(
                 $reqLat, $reqLong,
-                $arPosition['latitude'], $arPosition['longitude']
+                $arPosition['lat'], $arPosition['lng']
             );
 
             return $flDistance <= ((float) $strMaxDistance);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             return false;
         }
     }

@@ -22,8 +22,9 @@ namespace Netresearch\ContextsGeolocation\Context\Type;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-use \Netresearch\ContextsGeolocation\AbstractAdapter;
-use \Netresearch\ContextsGeolocation\Exception;
+
+use B13\Magnets\IpLocation;
+
 
 /**
  * Checks that the continent of the user is one of the configured ones.
@@ -74,10 +75,7 @@ class ContinentContext
                 return false;
             }
 
-            $geoip = AbstractAdapter
-                ::getInstance(
-                    $this->getRemoteAddress()
-                );
+            $geoip = new IpLocation($this->getRemoteAddress());
 
             $arContinents = explode(',', $strContinents);
             $strContinent = $geoip->getContinentCode();
@@ -93,7 +91,7 @@ class ContinentContext
             ) {
                 return true;
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
         }
 
         return false;

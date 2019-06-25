@@ -1,70 +1,37 @@
 {
-  "name": "netresearch/contexts_geolocation",
-  "type": "typo3-cms-extension",
-  "description": "Multi-channel contexts: Geolocation - Use the user's geographic location as context",
-  "keywords": [
-    "TYPO3",
-    "extension",
-    "contexts_geolocation",
-    "contexts"
-  ],
-  "homepage": "https://www.netresearch.de",
-  "support": {
-    "issues": "https://github.com/netresearch/t3x-contexts_geolocation/issues"
-  },
-  "authors": [
-    {
-      "name": "Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag",
-      "email": "typo3.org@netresearch.de",
-      "role": "Developer",
-      "homepage": "https://www.netresearch.de"
-    }
-  ],
-  "license": "GPL-2.0+",
-  "require": {
-    "netresearch/contexts": "^1.0"
-  },
-  "require-dev": {
-    "namelesscoder/typo3-repository-client": "^1.2",
-    "mikey179/vfsStream": "^1.4",
-    "phpunit/phpunit": "^4.7 || ^5.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Netresearch\\ContextsGeolocation\\": "Classes"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Netresearch\\ContextsGeolocation\\Tests\\": "Tests",
-      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
-      "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/"
-    }
-  },
-  "replace": {
-    "contexts_geolocation": "self.version",
-    "typo3-ter/contexts_geolocation": "self.version"
-  },
-  "config": {
-    "vendor-dir": ".Build/vendor",
-    "bin-dir": ".Build/bin",
-    "preferred-install": {
-      "typo3/cms": "source"
-    }
-  },
-  "scripts": {
-    "post-autoload-dump": [
-      "mkdir -p .Build/Web/typo3conf/ext/",
-      "[ -L .Build/Web/typo3conf/ext/contexts_geolocation ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/contexts_geolocation"
-    ]
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0.x-dev"
-    },
-    "typo3/cms": {
-      "cms-package-dir": "{$vendor-dir}/typo3/cms",
-      "web-dir": ".Build/Web"
-    }
-  }
+	"name": "netresearch/contexts-geolocation",
+	"type": "typo3-cms-extension",
+	"description": "Multi-channel contexts: Geolocation - Use the user's geographic location as context",
+	"keywords": [
+		"TYPO3",
+		"extension",
+		"contexts_geolocation",
+		"contexts"
+	],
+	"homepage": "https://www.netresearch.de",
+	"support": {
+		"issues": "https://github.com/netresearch/t3x-contexts_geolocation/issues"
+	},
+	"authors": [
+		{
+			"name": "Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag",
+			"email": "typo3.org@netresearch.de",
+			"role": "Developer",
+			"homepage": "https://www.netresearch.de"
+		}
+	],
+	"license": "GPL-2.0+",
+	"require": {
+		"netresearch/contexts": "^1.0",
+		"b13/magnets": "dev-master"
+	},
+	"autoload": {
+		"psr-4": {
+			"Netresearch\\ContextsGeolocation\\": "Classes"
+		}
+	},
+	"replace": {
+		"contexts_geolocation": "self.version",
+		"typo3-ter/contexts_geolocation": "self.version"
+	}
 }
